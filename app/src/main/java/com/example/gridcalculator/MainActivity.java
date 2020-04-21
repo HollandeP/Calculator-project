@@ -9,7 +9,13 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 String currVal = "";
+String prevVal = "";
+Double val1 = 0.0;
+Double val2 = 0.0;
+String mode = "";
 boolean isDouble = false;
+TextView operationString;
+TextView valueString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +41,14 @@ boolean isDouble = false;
         Button seven = findViewById(R.id.seven);
         Button eight = findViewById(R.id.eight);
         Button nine = findViewById(R.id.nine);
-        final TextView totalString = findViewById(R.id.totalString);
+        operationString = findViewById(R.id.operationString);
+        valueString = findViewById(R.id.valueString);
 
         zero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currVal += "0";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -49,7 +56,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "1";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -57,7 +64,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "2";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -65,7 +72,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "3";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -73,7 +80,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "4";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -81,7 +88,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "5";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -89,7 +96,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "6";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -97,7 +104,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "7";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -105,7 +112,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "8";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -113,7 +120,7 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal += "9";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
             }
         });
 
@@ -121,7 +128,22 @@ boolean isDouble = false;
             @Override
             public void onClick(View v) {
                 currVal = "";
-                totalString.setText(currVal);
+                valueString.setText(currVal);
+                if (prevVal.compareTo("") == 0) isDouble = false;
+            }
+        });
+
+        clearEverything.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currVal = "";
+                prevVal = "";
+                valueString.setText("");
+                operationString.setText("");
+                mode = "";
+                isDouble = false;
+                val1 = 0.0;
+                val2 = 0.0;
             }
         });
 
@@ -131,7 +153,7 @@ boolean isDouble = false;
             public void onClick(View v) {
                 if (!isDouble) {
                     currVal += ".";
-                    totalString.setText(currVal);
+                    valueString.setText(currVal);
                     isDouble = true;
                 }
             }
@@ -140,15 +162,60 @@ boolean isDouble = false;
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDouble){
-                    Double temp = Double.parseDouble(currVal) * -1;
-                    currVal = temp.toString();
-                    totalString.setText(currVal);
-                }
-                else{
-                    Integer temp = Integer.parseInt(currVal) * -1;
-                    currVal = temp.toString();
-                    totalString.setText(currVal);
+                //Disables changing sign when no value exists
+                if (currVal.compareTo("") == 0) return;
+
+                Double temp = Double.parseDouble(currVal) * -1;
+                currVal = temp.toString();
+                valueString.setText(currVal);
+
+            }
+        });
+
+        equals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Double total;
+
+                if (prevVal.compareTo("") != 0) val1 = Double.parseDouble(prevVal);
+                if (currVal.compareTo("") != 0) val2 = Double.parseDouble(currVal);
+
+                switch (mode){
+                    case "plus":
+                        total = val1 + val2;
+                        operationString.setText(val1.toString() + " + " + val2.toString() + " = " + total.toString());
+                        valueString.setText(total.toString());
+                        val1 = total;
+                        currVal = "";
+                        prevVal = "";
+                        break;
+                    case "minus":
+                        total = val1 - val2;
+                        operationString.setText(val1.toString() + " - " + val2.toString() + " = " + total.toString());
+                        valueString.setText(total.toString());
+                        val1 = total;
+                        currVal = "";
+                        prevVal = "";
+                        break;
+                    case "multiply":
+                        total = val1 * val2;
+                        operationString.setText(val1.toString() + " * " + val2.toString() + " = " + total.toString());
+                        valueString.setText(total.toString());
+                        val1 = total;
+                        currVal = "";
+                        prevVal = "";
+                        break;
+                    case "divide":
+                        total = val1 / val2;
+                        operationString.setText(val1.toString() + " / " + val2.toString() + " = " + total.toString());
+                        valueString.setText(total.toString());
+                        val1 = total;
+                        currVal = "";
+                        prevVal = "";
+                        break;
+
+                    default:
+                        return;
                 }
             }
         });
@@ -156,9 +223,99 @@ boolean isDouble = false;
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mode = "plus";
+                if(val1 != 0.0){
+                    operationString.setText(val1.toString() + " + ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                else if (prevVal.compareTo("") == 0){
+                    prevVal = currVal;
+                    operationString.setText(prevVal + " + ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                //Runs when changing operation
+                else{
+                    currVal = "";
+                    valueString.setText("");
+                    operationString.setText(prevVal + " + ");
+                }
             }
         });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mode = "minus";
+                if(val1 != 0.0){
+                    operationString.setText(val1.toString() + " - ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                else if (prevVal.compareTo("") == 0){
+                    prevVal = currVal;
+                    operationString.setText(prevVal + " - ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                //Runs when changing operation
+                else{
+                    currVal = "";
+                    valueString.setText("");
+                    operationString.setText(prevVal + " - ");
+                }
+            }
+        });
+
+        multiply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mode = "multiply";
+                if(val1 != 0.0){
+                    operationString.setText(val1.toString() + " * ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                else if (prevVal.compareTo("") == 0){
+                    prevVal = currVal;
+                    operationString.setText(prevVal + " * ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                //Runs when changing operation
+                else{
+                    currVal = "";
+                    valueString.setText("");
+                    operationString.setText(prevVal + " * ");
+                }
+            }
+        });
+
+        divide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mode = "divide";
+                if(val1 != 0.0){
+                    operationString.setText(val1.toString() + " / ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                else if (prevVal.compareTo("") == 0){
+                    prevVal = currVal;
+                    operationString.setText(prevVal + " / ");
+                    currVal = "";
+                    valueString.setText("");
+                }
+                //Runs when changing operation
+                else{
+                    currVal = "";
+                    valueString.setText("");
+                    operationString.setText(prevVal + " / ");
+                }
+            }
+        });
+
 
 
     }
