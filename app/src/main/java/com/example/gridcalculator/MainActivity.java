@@ -1,5 +1,6 @@
 package com.example.gridcalculator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -318,5 +319,31 @@ TextView valueString;
 
 
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("currVal", currVal);
+        savedInstanceState.putString("prevVal", prevVal);
+        savedInstanceState.putString("mode", mode);
+        savedInstanceState.putDouble("val1", val1);
+        savedInstanceState.putDouble("val2", val2);
+        savedInstanceState.putBoolean("isDouble", isDouble);
+        savedInstanceState.putString("operationString", operationString.getText().toString());
+        savedInstanceState.putString("valueString", valueString.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currVal = savedInstanceState.getString("curVal", "");
+        prevVal = savedInstanceState.getString("prevVal", "");
+        mode = savedInstanceState.getString("mode", "");
+        val1 = savedInstanceState.getDouble("val1", 0.0);
+        val2 = savedInstanceState.getDouble("val2", 0.0);
+        isDouble = savedInstanceState.getBoolean("isDouble", false);
+        operationString.setText(savedInstanceState.getString("operationString", ""));
+        valueString.setText(savedInstanceState.getString("valueString", ""));
     }
 }
